@@ -17,6 +17,7 @@
   "dependencies": {
     "mongodb": "^2.2.31",
     "mongoose": "^4.11.11",
-    "n-readlines": "^0.2.8"
+    "n-readlines": "^0.2.8",
+    "node-watch": "^0.5.5"
   }
 }

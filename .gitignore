@@ -1,3 +1,5 @@
 node_modules/
 der2_*/
 config.private.ts
+*.js
+*.map.js

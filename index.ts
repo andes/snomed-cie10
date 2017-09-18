@@ -9,24 +9,50 @@ import * as mongodb from 'mongodb';
  */
 import * as config from './config.private';
 
+let toSave = [];
+let Running = false;
+
+if (process.argv.length >= 3 && process.argv[2] === '-w') {
+    var watch = require('node-watch');
+    watch(config.map_file, function (evt, name) {
+        if (!Running) {
+            Running = true;
+            console.log('Files ' + name + '. Running procces', evt);
+
+            // wait for saved file
+            setTimeout(() => {
+                main();
+            }, 3000);
+
+        }
+    });
+
+} else {
+    main();
+}
+
 
 /**
  * Iniciamos la conexión con mongo y borramos lo que allá en la colleción
  */
-mongodb.MongoClient.connect(config.mongoHost, function (err: any, db) {
-    if (err) {
-        console.log(err);
-        process.exit();
-        return;
-    }
-    db.collection(config.collection_name).remove().then((result) => {
-        console.log(result.result);
-        init(db);
-
+function main() {
+    mongodb.MongoClient.connect(config.mongoHost, function (err: any, db) {
+        if (err) {
+            process.exit();
+            return;
+        }
+        db.collection(config.collection_name).remove().then((result) => {
+            init(db);
+            // Wait to mongo flush writes to disk
+            setTimeout(() => {
+                db.close();
+                Running = false;
+            }, 3000);
+        });
     });
-});
 
-let toSave = [];
+}
+
 
 /**
  * Leemos el archivo linea por linea e insertamos en la collecion de destino
@@ -40,10 +66,11 @@ function init(db) {
     var line;
     var lineNumber = 0;
     while (line = liner.next()) {
+        lineNumber++;
         readLine(db, line.toString('ascii'));
     }
     saveValue(db);
-    console.log('Terminamos!');
+    console.log('Terminamos!', lineNumber);
     // process.exit();
 }
 
@@ -59,8 +86,8 @@ function readLine(db, line) {
     if (columns[0] !== 'id' && columns.length > 2) {
         let data = {
             conceptId: columns[5],
-            mapGroup: columns[6],
-            mapPriority: columns[7],
+            mapGroup: Number(columns[6]),
+            mapPriority: Number(columns[7]),
             mapRule: parseRules(columns[8]),
             mapAdvice: columns[9],
             mapTarget: columns[10]
