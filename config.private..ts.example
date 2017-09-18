@@ -1,0 +1,4 @@
+// export const mongoHost = 'mongodb://10.1.62.17:27017/andes';
+export const map_file = './der2_Refset_ICD10CM_US_20170301/der2_iisssccRefset_ExtendedMapSnapshot_US1000124_20170301.txt';
+export const collection_name = 'snomed-cie10';
+export const mongoHost = 'mongodb://localhost:27017/andes';

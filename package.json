@@ -1,0 +1,22 @@
+{
+  "name": "snomed-cie10",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node index.js",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
+  },
+  "author": "Andes",
+  "license": "GLP3",
+  "devDependencies": {
+    "@types/node": "^8.0.28",
+    "tslint-eslint-rules": "^4.1.1"
+  },
+  "dependencies": {
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.11",
+    "n-readlines": "^0.2.8"
+  }
+}
