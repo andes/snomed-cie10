@@ -47,7 +47,7 @@ function main() {
             setTimeout(() => {
                 db.close();
                 Running = false;
-            }, 3000);
+            }, 30000);
         });
     });
 
